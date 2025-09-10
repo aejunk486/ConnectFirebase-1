@@ -1,0 +1,17 @@
+//Rules
+// firestore.rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // อนุญาตให้อ่านรายการ todos ได้โดยไม่ต้องล็อกอิน (เพื่อเดโม)
+    // แต่เขียนได้เฉพาะผู้ที่ล็อกอิน
+    match /ชื่อฐานข้อมูล/{todoId} {
+      allow read,write: if true;
+      allow create, update, delete: if request.auth != null;
+    }
+
+    // ปิดค่าเริ่มต้น
+    match /{document=**} { allow read, write: if false; }
+  }
+}
